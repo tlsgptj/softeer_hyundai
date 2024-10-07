@@ -28,26 +28,32 @@ public class DFS2 {
             colorDots[color].add(new int[]{x, y}); 
             //해당 색깔의 ArrayList에 (x, y) 좌표를 추가
         }
-        
+        // 백트래킹 시작, 초기 색깔은 1, x와 y의 경로를 저장할 리스트는 비어 있음
         backtracking(1, k, new ArrayList<>(), new ArrayList<>());
+        // 최소 면적을 출력
         System.out.println(minArea);
     }
-
+    // 백트래킹 메서드 : 모든 색깔을 포함하는 직사각형의 최소 면적을 구함
     static void backtracking(int color, int endColor, List<Integer> pathX, List<Integer> pathY) {
+        // 종료 조건 : 모든 색깔을 탐색했을 경우
         if (color > endColor) {
-            int xMin = Collections.min(pathX);
-            int xMax = Collections.max(pathX);
-            int yMin = Collections.min(pathY);
-            int yMax = Collections.max(pathY);
-            int area = (xMax - xMin) * (yMax - yMin);
-            minArea = Math.min(minArea, area);
+            // 현재 저장된 좌표들로 직사각형의 면적을 계산
+            int xMin = Collections.min(pathX); // x좌표 중 최소값
+            int xMax = Collections.max(pathX); // x좌표 중 최대값
+            int yMin = Collections.min(pathY); // y좌표 중 최소값
+            int yMax = Collections.max(pathY); // y좌표 중 최대값 
+            int area = (xMax - xMin) * (yMax - yMin); //직사각형의 면적 계산
+            minArea = Math.min(minArea, area); 
+            // 현재 계산한 면적이 최소 면적보다 작으면 업데이트
             return;
         }
-
+        // 현재 색깔의 모든 좌표에 대해 백트래킹 수행
         for (int[] dot : colorDots[color]) {
-            pathX.add(dot[0]);
-            pathY.add(dot[1]);
+            pathX.add(dot[0]); //현재 좌표의 x값을 경로에 추가
+            pathY.add(dot[1]); //현재 좌표의 y값을 경로에 추가
+            // 다음 색깔을 탐색하도록 재귀 호출
             backtracking(color + 1, endColor, pathX, pathY);
+            // 백트래킹 : 경로에서 마지막으로 추가한 좌표를 제거하여 이전 상태로 복원
             pathX.remove(pathX.size() - 1);
             pathY.remove(pathY.size() - 1);
         }
